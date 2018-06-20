@@ -30,6 +30,7 @@ import (
 	"os"
 	"os/exec"
 	"reflect"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -1148,7 +1149,6 @@ func NewConsoleExpecter(virtCli kubecli.KubevirtClient, vmi *v1.VirtualMachineIn
 	vmiReader, vmiWriter := io.Pipe()
 	expecterReader, expecterWriter := io.Pipe()
 	resCh := make(chan error)
-	stopChan := make(chan struct{})
 	go func() {
 		con, err := virtCli.VirtualMachineInstance(vmi.ObjectMeta.Namespace).SerialConsole(vmi.ObjectMeta.Name)
 		if err != nil {
@@ -1169,7 +1169,8 @@ func NewConsoleExpecter(virtCli kubecli.KubevirtClient, vmi *v1.VirtualMachineIn
 			return <-resCh
 		},
 		Close: func() error {
-			close(stopChan)
+			expecterWriter.Close()
+			vmiReader.Close()
 			return nil
 		},
 		Check: func() bool { return true },
@@ -1195,19 +1196,19 @@ func RegistryDiskFor(name RegistryDisk) string {
 	panic(fmt.Sprintf("Unsupported registry disk %s", name))
 }
 
-func CheckForTextExpecter(vmi *v1.VirtualMachineInstance, text string, wait int) error {
+func CheckForTextExpecter(vmi *v1.VirtualMachineInstance, expected []expect.Batcher, wait int) error {
 	virtClient, err := kubecli.GetKubevirtClient()
 	PanicOnError(err)
 	expecter, _, err := NewConsoleExpecter(virtClient, vmi, 10*time.Second)
 	if err != nil {
 		return err
 	}
-	b := append([]expect.Batcher{
-		&expect.BSnd{S: "\n"},
-		&expect.BSnd{S: "\n"},
-		&expect.BExp{R: text},
-	})
-	_, err = expecter.ExpectBatch(b, time.Second*time.Duration(wait))
+	defer expecter.Close()
+
+	resp, err := expecter.ExpectBatch(expected, time.Second*time.Duration(wait))
+	if err != nil {
+		log.DefaultLogger().Object(vmi).Infof("%v", resp)
+	}
 	return err
 }
 
@@ -1268,7 +1269,11 @@ func LoggedInAlpineExpecter(vmi *v1.VirtualMachineInstance) (expect.Expecter, er
 		&expect.BSnd{S: "root\n"},
 		&expect.BExp{R: "localhost:~#"}})
 	res, err := expecter.ExpectBatch(b, 180*time.Second)
-	log.DefaultLogger().Object(vmi).V(4).Infof("%v", res)
+	if err != nil {
+		log.DefaultLogger().Object(vmi).Infof("Login: %v", res)
+		expecter.Close()
+		return nil, err
+	}
 	return expecter, err
 }
 
