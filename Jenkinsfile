@@ -2,6 +2,7 @@ pipeline {
   agent any
   stages {
     stage('Tests') {
+      when { changeRequest() } 
       parallel {
         stage('k8s-1.10.3-dev') {
           environment {
