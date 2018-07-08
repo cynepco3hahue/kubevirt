@@ -10,6 +10,7 @@ pipeline {
           steps {
             sh '''#!/bin/bash
 set -o pipefail
+pwd
 cd go/src/kubevirt.io/kubevirt && bash automation/test.sh 2>&1 | tee ${WORKSPACE}/k8s-1.10.3-dev-console.log'''
           }
         }
@@ -20,6 +21,7 @@ cd go/src/kubevirt.io/kubevirt && bash automation/test.sh 2>&1 | tee ${WORKSPACE
           steps {
             sh '''#!/bin/bash
 set -o pipefail
+pwd
 cd go/src/kubevirt.io/kubevirt && bash automation/test.sh 2>&1 | tee ${WORKSPACE}/k8s-1.10.3-dev-console.log'''
           }
         }
