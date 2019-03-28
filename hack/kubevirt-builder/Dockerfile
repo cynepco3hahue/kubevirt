@@ -1,4 +1,5 @@
-FROM kubevirt/builder@sha256:cd662847df816a0c5cf1a99dcb905301d305befe93d50bee8d00fdd5c74beb19
+#FROM kubevirt/builder@sha256:cd662847df816a0c5cf1a99dcb905301d305befe93d50bee8d00fdd5c74beb19
+FROM kubevirt/builder:28-5.0.0
 
 ENV GIMME_GO_VERSION=1.11.5
 ENV GOPATH="/go" GOBIN="/usr/bin"
@@ -18,3 +19,4 @@ RUN pip install j2cli
 COPY rsyncd.conf /etc/rsyncd.conf
 
 ENTRYPOINT [ "/entrypoint.sh" ]
+RUN mkdir -p /home/nitesh
