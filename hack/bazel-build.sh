@@ -27,7 +27,8 @@ mkdir -p ${CMD_OUT_DIR}/virtctl
 
 # Build all binaries for amd64
 bazel build \
-    --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 \
+    --sandbox_debug \
+    --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64le \
     --workspace_status_command=./hack/print-workspace-status.sh \
     //cmd/...
 
@@ -40,7 +41,7 @@ bazel run \
 
 # linux
 bazel run \
-    --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 \
+    --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64le \
     --workspace_status_command=./hack/print-workspace-status.sh \
     :build-virtctl -- ${CMD_OUT_DIR}/virtctl/virtctl-${KUBEVIRT_VERSION}-linux-amd64
 

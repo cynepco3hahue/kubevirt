@@ -16,7 +16,7 @@ spec:
       type: "pseries-3.1"
     resources:
       requests:
-        memory: 64M
+        memory: 512M
   terminationGracePeriodSeconds: 0
   volumes:
   - containerDisk:

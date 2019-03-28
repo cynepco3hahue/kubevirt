@@ -23,6 +23,7 @@ source hack/common.sh
 source hack/config.sh
 
 bazel build \
+    --sandbox_debug \
     --platforms=@io_bazel_rules_go//go/toolchain:linux_ppc64le \
     --workspace_status_command=./hack/print-workspace-status.sh \
     --define container_prefix=${docker_prefix} \

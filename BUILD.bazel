@@ -69,8 +69,7 @@ genrule(
         "libvirt-qemu.so.0.5001.0",
     ],
     cmd = "\n".join([
-        "rpm2archive $(location @libvirt_libs//file)",
-        "tar -xzf $(location @libvirt_libs//file).tgz",
+        "rpm2cpio $(location @libvirt_libs//file) | cpio -idmv",
         "cp -R usr/lib64/*.so.0.5001.0 $(@D)",
     ]),
 )
@@ -107,8 +106,7 @@ genrule(
         "libvirt/virterror.h",
     ],
     cmd = "\n".join([
-        "rpm2archive $(location @libvirt_devel//file)",
-        "tar -xzf $(location @libvirt_devel//file).tgz",
+        "rpm2cpio $(location @libvirt_devel//file) | cpio -idmv",
         "cp -R usr/include/libvirt $(@D)",
     ]),
 )
