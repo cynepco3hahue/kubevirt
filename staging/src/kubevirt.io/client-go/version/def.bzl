@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Implements hack/version.sh's kube::version::ldflags() for Bazel.
+# Implements hack/version.sh's kubevirt::version::ldflags() for Bazel.
 def version_x_defs():
-    # This should match the list of packages in kube::version::ldflag
+    # This should match the list of packages in kubevirt::version::ldflag
     stamp_pkgs = [
-        "kubevirt.io/client-go/version",
+        "kubevirt.io/kubevirt/vendor/kubevirt.io/client-go/version",
     ]
 
-    # This should match the list of vars in kube::version::ldflags
+    # This should match the list of vars in kubevirt::version::ldflags
     # It should also match the list of vars set in hack/print-workspace-status.sh.
     stamp_vars = [
         "buildDate",
