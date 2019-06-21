@@ -31,7 +31,7 @@ fi
 
 if [ $# -eq 0 ]; then
     args=$docker_images
-    build_tests="true"
+    build_tests="false"
 else
     args=$@
 fi
