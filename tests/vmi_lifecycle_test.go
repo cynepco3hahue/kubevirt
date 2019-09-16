@@ -443,7 +443,7 @@ var _ = Describe("[rfe_id:273][crit:high][vendor:cnv-qe@redhat.com][level:compon
 				// Give virt-handler some time. It can greatly vary when virt-handler will be ready again
 				stopChan := make(chan struct{})
 				defer close(stopChan)
-				tests.NewObjectEventWatcher(vmi).Timeout(120*time.Second).SinceWatchedObjectResourceVersion().WaitFor(stopChan, tests.WarningEvent, v1.Stopped)
+				tests.NewObjectEventWatcher(vmi).Timeout(180*time.Second).SinceWatchedObjectResourceVersion().WaitFor(stopChan, tests.WarningEvent, v1.Stopped)
 
 				By("Checking that VirtualMachineInstance has 'Failed' phase")
 				Eventually(func() v1.VirtualMachineInstancePhase {
