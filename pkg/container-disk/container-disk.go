@@ -143,7 +143,7 @@ func GenerateContainers(vmi *v1.VirtualMachineInstance, podVolumeName string, bi
 				Image:           diskContainerImage,
 				ImagePullPolicy: volume.ContainerDisk.ImagePullPolicy,
 				Command:         []string{"/usr/bin/container-disk"},
-				Args:            []string{"--copy-path", volumeMountDir + "/disk_" + strconv.Itoa(index)},
+				Args:            []string{"-c", volumeMountDir + "/disk_" + strconv.Itoa(index)},
 				VolumeMounts: []kubev1.VolumeMount{
 					{
 						Name:      podVolumeName,
@@ -163,7 +163,7 @@ func GenerateContainers(vmi *v1.VirtualMachineInstance, podVolumeName string, bi
 						Exec: &kubev1.ExecAction{
 							Command: []string{
 								"/usr/bin/container-disk",
-								"--health-check",
+								"-p",
 							},
 						},
 					},
